@@ -25,7 +25,7 @@ TestingSessionLocal = sessionmaker(
 Base.metadata.create_all(bind=engine)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def session():
     # drop all tables then create them for testing
     Base.metadata.drop_all(bind=engine)
@@ -39,7 +39,7 @@ def session():
         db.close()
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def client(session):
     def override_get_db():
 
