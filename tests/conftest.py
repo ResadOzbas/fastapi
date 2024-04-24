@@ -7,6 +7,7 @@ from app.database import get_db
 from app.main import app
 from app.config import settings
 from app.database import Base
+from app.oath2 import createAccessToken
 
 
 SQLALCHEMY_DATABASE_URL = (
@@ -66,3 +67,17 @@ def test_user(client):
     new_user['password'] = user_data['password']
 
     return new_user
+
+
+@pytest.fixture()
+def token(test_user):
+    return createAccessToken({"user_id": test_user['id']})
+
+
+@pytest.fixture()
+def authorised_client(client, token):
+    client.headers = {
+        **client.headers,
+        "Authorization": f"Bearer {token}"
+    }
+    return client
